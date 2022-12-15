@@ -1,4 +1,7 @@
 import sys
+import pprint
+
+pp = pprint.PrettyPrinter(indent=4).pprint
 
 
 def main():
