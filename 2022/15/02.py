@@ -3,26 +3,26 @@ import pprint
 
 pp = pprint.PrettyPrinter(indent=4).pprint
 
-# TARGET = 10
-TARGET = 2_000_000
+TARGET = 4_000_000
 
 
 def main():
-    result = solve(TARGET)
-    print("result is", result)
-
-
-def solve(target):
     nodes = build_node_list()
-    # print("nodes")
-    # pp(nodes)
+    for x in range(TARGET + 1):
+        # x = 3_204_480
+        sol = solve(x, nodes)
+        if len(sol) > 1 or sol[0][0] > 0 or sol[-1][1] < TARGET:
+            coord = [x, sol[0][1] + 1]
+            tuning_frequency = calculate_tuning_frequency(coord)
+            print(x, sol)
+            print(coord, tuning_frequency)
 
+
+def solve(target, nodes):
     overlaps = build_overlap_list(target, nodes)
-    # print("overlaps")
+    # print(target, end=" ")
     # pp(overlaps)
-
-    solution = count_overlap_length(overlaps)
-    return solution
+    return overlaps
 
 
 def build_node_list():
@@ -63,22 +63,20 @@ def build_overlap_list(target, nodes):
         overlap = calculate_overlap(target, node)
         if overlap:
             overlaps.append(overlap)
-            # print("append", node, overlap)
-        # else:
-        #     print("skip", node)
     overlaps.sort()
+    # pp(overlaps)
     overlaps = merge_overlaps(overlaps)
     return overlaps
 
 
 def calculate_overlap(target, node):
     (coord, height) = node
-    distance = abs(coord[1] - target)
+    distance = abs(coord[0] - target)
     # print("distance", distance)
     if distance > height:
         return False
     width = height - distance
-    return (coord[0] - width, coord[0] + width)
+    return (coord[1] - width, coord[1] + width)
 
 
 def merge_overlaps(overlaps):
@@ -89,17 +87,14 @@ def merge_overlaps(overlaps):
         if ov[0] <= current[1] + 1:
             current[1] = max(current[1], ov[1])
         else:
-            result.append(ov)
+            result.append(list(current))
             current = list(ov)
     result.append(current)
     return result
 
 
-def count_overlap_length(overlaps):
-    result = 0
-    for ov in overlaps:
-        result += ov[1] - ov[0]
-    return result
+def calculate_tuning_frequency(coord):
+    return 4_000_000 * coord[0] + coord[1]
 
 
 main()
