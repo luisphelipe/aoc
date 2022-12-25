@@ -13,8 +13,6 @@ DP = {}
 
 
 def solve():
-    #  global DP
-    #  pp(DP)
 
     nodes = build_nodes()
     pp(nodes)
@@ -22,10 +20,11 @@ def solve():
     result = dfs(nodes, nodes['AA'], build_meta())
     pp(result)
 
-    maxv = max(result)
-    pp(maxv)
+    global DP
+    some_values = list(sorted(DP.items()))[:30]
+    pp(some_values)
 
-    return maxv
+    return result
 
 
 def process_tick(meta):
@@ -45,6 +44,7 @@ def build_meta():
 
 
 ticks = 30
+MAX_TICKS = 30
 
 
 def dfs(nodes, node, meta):
@@ -52,43 +52,43 @@ def dfs(nodes, node, meta):
     global DP
     val = DP.get(key, False)
     if val:
-        return val
+        return val + meta['total']
 
     global ticks
     if meta['tick'] == ticks:
-        pp(meta)
+        print(f"step {31 - ticks}/30...")
         ticks -= 1
 
-    if meta['tick'] >= 30:
-        return [meta['total']]
+    global MAX_TICKS
+    if meta['tick'] >= MAX_TICKS:
+        return meta['total']
 
     results = check_children(nodes, node, meta)
 
     if valve_is_not_open(node, meta):
         meta = open_valve(node, meta)
-        results.extend(check_children(nodes, node, meta))
+        #  results.extend(check_children(nodes, node, meta))
+        results.append(dfs(nodes, node, meta))
 
-    results = [max(list(set(results)))]
+    results = max(list(set(results)))
     key = dpkey(node, meta)
-    DP[key] = results
+    DP[key] = results - meta['total']
     return results
 
 
 def dpkey(node, meta):
     tick = meta['tick']
-    rate = meta['rate']
     name = node['name']
     checked = ",".join(sorted(meta['checked']))
-    return f"{tick:02d}_{rate}_{name}_with_{checked}"
+    return f"{tick}_{name}_with_{checked}"
 
 
 def open_valve(node, meta):
-    tmp = dict(meta)
+    tmp = process_tick(dict(meta))
     tmp['rate'] += node['rate']
     checked = list(tmp['checked'])
     checked.append(node['name'])
     tmp['checked'] = checked
-    tmp = process_tick(tmp)
     return tmp
 
 
@@ -101,7 +101,7 @@ def check_children(nodes, node, meta):
     results = []
     for child in node['children']:
         res = dfs(nodes, nodes[child], dict(meta))
-        results.extend(res)
+        results.append(res)
     return results
 
 

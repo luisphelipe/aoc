@@ -1,1 +1,0 @@
-from each "tick_SELECTED", memoize the max amount of pressure from the given tick.
