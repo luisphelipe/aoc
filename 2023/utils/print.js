@@ -1,3 +1,42 @@
+class DebugStackLog {
+  stack;
+  start;
+  debug;
+
+  constructor(debug = true) {
+    this.stack = [];
+    this.start = Date.now();
+    this.debug = debug;
+  }
+
+  log(title, ...args) {
+    const time = Date.now();
+    this.stack.push({
+      title,
+      args,
+      time,
+      timeDiff: time - this.start,
+    });
+  }
+
+  print() {
+    for (const log of this.stack) {
+      this._printLine(log);
+    }
+  }
+
+  _printLine(log) {
+    if (!this.debug) return;
+
+    const time = new Date().toLocaleString().split(" ")[1].padStart(8, "0");
+    const timeDiffSec = ((log.timeDiff || 0) / 1000).toFixed(3);
+    const timeDiffPrefix = `(+${timeDiffSec})`;
+    const title_prefix = `${time} ${timeDiffPrefix} `;
+
+    console.log(`${title_prefix}${log.title}`);
+  }
+}
+
 const COLOR_RESET = "\x1b[0m";
 
 const FG_COLORS = {
@@ -41,10 +80,10 @@ const colorMatch = (string, match, _options = {}) => {
   return colored;
 };
 
-const printDebug = (string, debug = true) => {
+const printDebug = (log, debug = true) => {
   if (debug) {
-    console.log(string);
+    console.log(log);
   }
 };
 
-module.exports = { printDebug, colorMatch };
+module.exports = { DebugStackLog, printDebug, colorMatch };

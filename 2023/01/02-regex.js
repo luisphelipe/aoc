@@ -1,21 +1,14 @@
 const { readExample, readInput } = require("../utils/input");
-const { DebugStackLog, printDebug, colorMatch } = require("../utils/print");
+const { printDebug, colorMatch } = require("../utils/print");
 
 const DEBUG = false;
 
 const main = async () => {
-  const debugLog = new DebugStackLog("[01/02]");
-  debugLog.log("starting");
-
   // const input = await readExample(__dirname);
   // const input = await readInput(__dirname, { filename: "example2" });
   const input = await readInput(__dirname);
-  debugLog.log("read input");
 
-  const solution = solve(input);
-  debugLog.log("completed solve");
-  debugLog.print();
-  console.log(`solution = ${solution}`);
+  solve(input);
 };
 
 const solve = (stringArray) => {
@@ -27,6 +20,7 @@ const solve = (stringArray) => {
   }
 
   const sum = solutions.reduce((a, b) => a + b, 0);
+  console.log(`total = ${sum}`);
 
   return sum;
 };
@@ -45,12 +39,8 @@ const digits = [
 ];
 
 const solveForLine = (string) => {
-  const match = [...Object.keys(digits), ...digits];
+  const match = [...Object.keys(digits), ...digits].join("|");
   const matches = matchesWithIndex(string, match);
-
-  // console.log(string);
-  // console.log(matches);
-
   const sorted = matches.sort((a, b) => (a.index < b.index ? -1 : 1));
 
   const first = sorted[0];
@@ -66,34 +56,14 @@ const solveForLine = (string) => {
   return value;
 };
 
-const matchesWithIndex = (string, options) => {
-  // console.log(options);
-  const matches = [];
-
-  for (let ind = 0; ind < string.length; ind++) {
-    for (const substring of options) {
-      if (match(string, ind, substring)) {
-        matches.push({
-          value: toNumber(substring),
-          index: ind,
-        });
-        break;
-      }
-    }
-  }
-
+const matchesWithIndex = (string, match) => {
+  const pattern = `(?=(${match}))`; // with lookahead matching to work with overlaps
+  const regex = new RegExp(pattern, "g");
+  const matches = [...string.matchAll(regex)].map((item) => ({
+    value: toNumber(item[1]),
+    index: item.index,
+  }));
   return matches;
-};
-
-const match = (string, baseIndex, substring) => {
-  for (let ind = 0; ind < substring.length; ind++) {
-    if (string[baseIndex + ind] !== substring[ind]) {
-      return false;
-    }
-  }
-
-  return true;
-  // return string.slice(0, substring.length) === substring;
 };
 
 const toNumber = (spelled) => {
