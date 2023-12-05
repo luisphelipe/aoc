@@ -80,10 +80,14 @@ const colorMatch = (string, match, _options = {}) => {
   return colored;
 };
 
+const printJson = (log) => {
+  console.log(JSON.stringify(log, null, 4));
+};
+
 const printDebug = (log, debug = true) => {
   if (debug) {
     console.log(log);
   }
 };
 
-module.exports = { DebugStackLog, printDebug, colorMatch };
+module.exports = { DebugStackLog, printDebug, printJson, colorMatch };
