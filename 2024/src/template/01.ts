@@ -1,6 +1,6 @@
 import * as path from 'path';
 import { readFile } from '../utils/input';
-import { pj } from '../utils/print';
+import { p, pm } from '../utils/print';
 
 const sampleFilepath = path.join(__dirname, 'sample');
 const inputFilepath = path.join(__dirname, 'input');
@@ -11,10 +11,10 @@ const main = () => {
         // pj(rawInput);
 
         const input = parseInput(rawInput);
-        // pj(input);
+        // pm(input);
 
         const result = solve(input);
-        pj(result);
+        p('RESULT:', result);
 };
 
 const parseInput = (rawInput: string) => {
@@ -23,8 +23,8 @@ const parseInput = (rawInput: string) => {
 };
 
 const solve = (input: string[]) => {
-        const result = 'Working';
-        return result;
+        const total = 0;
+        return total;
 };
 
 main();
