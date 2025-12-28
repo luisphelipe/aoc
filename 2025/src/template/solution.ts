@@ -31,6 +31,8 @@ const solvePart2 = (input: string[]) => {
     return 0;
 };
 
-main();
+if (require.main === module) {
+    main();
+}
 
-export {};
+export { parseInput, solvePart1, solvePart2 };
