@@ -1,0 +1,19 @@
+{
+    "name": "2025",
+    "version": "1.0.0",
+    "main": "index.js",
+    "license": "MIT",
+    "dependencies": {
+        "@types/node": "^22.10.1",
+        "ts-node": "^10.9.2",
+        "typescript": "^5.7.2"
+    },
+    "scripts": {
+        "format": "prettier --write \"src/**/*.(ts|json)\"",
+        "new": "bash -c 'cp -r src/template src/$0'",
+        "day": "bash -c 'npx ts-node src/$0/solution.ts'"
+    },
+    "devDependencies": {
+        "prettier": "^3.4.2"
+    }
+}
