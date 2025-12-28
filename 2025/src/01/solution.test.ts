@@ -1,30 +1,36 @@
-import * as assert from 'assert';
 import * as path from 'path';
 import { readFile } from '../utils/input';
 import { parseInput, solvePart1, solvePart2 } from './solution';
 
 const sampleFilepath = path.join(__dirname, 'sample');
 
-const testPart1 = (input: string[]) => {
-    const result = solvePart1(input);
-    assert.strictEqual(result, 3, `Part 1: expected 3, got ${result}`);
-    console.log('✓ Part 1 passed');
-};
+const runTests = (tests: [string, unknown, unknown][]) => {
+    let passed = 0;
+    let failed = 0;
 
-const testPart2 = (input: string[]) => {
-    const result = solvePart2(input);
-    assert.strictEqual(result, 6, `Part 2: expected 6, got ${result}`);
-    console.log('✓ Part 2 passed');
+    for (const [desc, value, expected] of tests) {
+        if (value != expected) {
+            console.log(`✗ ${desc}: expected ${expected}, got ${value}`);
+            failed++;
+        } else {
+            console.log(`✓ ${desc}`);
+            passed++;
+        }
+    }
+
+    console.log(`\n${passed} passed, ${failed} failed`);
 };
 
 const main = () => {
     const rawInput = readFile(sampleFilepath);
     const input = parseInput(rawInput);
 
-    // testPart1(input);
-    testPart2(input);
+    const tests: [string, unknown, unknown][] = [
+        ['Part 1', solvePart1(input), 3],
+        ['Part 2', solvePart2(input), 6],
+    ];
 
-    console.log('\nAll tests passed!');
+    runTests(tests);
 };
 
 main();
