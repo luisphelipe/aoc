@@ -40,21 +40,26 @@ const solvePart1 = (input: string[], debug = false) => {
 };
 
 const solvePart2 = (input: string[]) => {
-    let val = 50,
+    let current = 50,
         count = 0;
 
-    pd(input);
     for (const instruction of input) {
         const dir = instruction[0];
-        const mv = Number(instruction.slice(1));
-        const new_val = val + mv * (dir === 'L' ? -1 : 1);
+        const increment = dir === 'L' ? -1 : 1;
+        let value = Number(instruction.slice(1));
 
-        if (val > 0 && new_val <= 0) count++;
+        if (value > 100) {
+            count += Math.floor(value / 100);
+            value %= 100;
+        }
 
-        count += Math.floor(Math.abs(new_val) / 100);
-
-        val = new_val >= 0 ? new_val % 100 : 100 - Math.abs(new_val % 100);
-        pd({ dir, mv, new_val, val, count });
+        while (value > 0) {
+            current += increment;
+            if (current > 99) current = 0;
+            if (current < 0) current = 99;
+            if (current === 0) count++;
+            value--;
+        }
     }
 
     return count;
