@@ -1,3 +1,5 @@
+export const pd = (...data: any) => (process.env.DEBUG === 'TRUE' ? p(data) : {});
+
 export const p = (...data: any) => console.log(...data);
 
 export const pj = (data: any) => p(JSON.stringify(data, null, 4));
